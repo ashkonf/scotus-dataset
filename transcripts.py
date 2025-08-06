@@ -1,9 +1,7 @@
 import os
 import re
-import sys
 from io import StringIO
 import logging
-import re
 
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
@@ -11,7 +9,7 @@ from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.pdfpage import PDFPage
 
 from settings import TRANSCRIPTS_DIR_PATH, VERBOSE
-from models import Transcript, Statement, Case
+from models import Transcript, Statement
 
 
 ## General utility functions #########################################################################################################################

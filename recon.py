@@ -1,10 +1,8 @@
-import os
 import re
-import sys
 import logging
 
 from settings import VERBOSE
-from models import Transcript, Statement, Case
+from models import Transcript, Case
 from transcripts import preprocess_all_transcripts
 from scdb import load_cases
 
