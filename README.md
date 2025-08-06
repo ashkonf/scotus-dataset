@@ -1,19 +1,31 @@
 # Python SCOTUS Dataset
 
-## Contents
+Tools for retrieving, processing, and reconciling structured case data and oral argument transcripts from the Supreme Court of the United States (SCOTUS). The resulting dataset supports research and machine-learning models aimed at predicting case outcomes.
 
-- [Overview](#Overview)
-- [Background](#Background)
-- [Dependencies](#Dependencies)
-- [Usage](#Usage)
-- [Example](#Example)
-- [License](#License)
-- [Links](#Links)
+## Table of Contents
 
+- [Overview](#overview)
+- [Background](#background)
+  - [SCOTUS Decision Prediction](#scotus-decision-prediction)
+  - [Structured Data from the SCDB](#structured-data-from-the-scdb)
+  - [Unstructured SCOTUS Transcripts](#unstructured-scotus-transcripts)
+- [Dependencies](#dependencies)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Function: compile_data()](#function-compile_data)
+  - [Function: print_coverage_stats()](#function-print_coverage_stats)
+  - [Class: Case](#class-case)
+  - [Class: Transcript](#class-transcript)
+- [Example](#example)
+  - [Compiling Structured Data](#compiling-structured-data)
+  - [Using Compiled Data](#using-compiled-data)
+- [Contributing](#contributing)
+- [License](#license)
+- [Links](#links)
 
 ## Overview
 
-The Python SCOTUS Dataset is a repository for retrieving, processing, and maintaining structured data from the Supreme Court of the United States (SCOTUS). The Python functions in the repo can combine trial transcripts from the [SCOTUS website](https://www.supremecourt.gov/oral_arguments/argument_transcript/) with structured case data from the [Supreme Court Database](http://scdb.wustl.edu/) (SCDB) at the Washington University Law School to create comprehensive summaries of the most recent SCOTUS cases. The repo is primarily used for building systems that predict SCOTUS case decisions.
+The Python SCOTUS Dataset repository combines trial transcripts from the [SCOTUS website](https://www.supremecourt.gov/oral_arguments/argument_transcript/) with structured case data from the [Supreme Court Database](http://scdb.wustl.edu/) (SCDB) at Washington University Law School to create comprehensive summaries of recent cases. These data are primarily used for building systems that predict SCOTUS decisions.
 
 ## Background
 
@@ -31,12 +43,12 @@ Important cognitive biases must therefore be identified to better understand the
 
 The SCDB, developed by Harold Spaeth, is a widely used database for SCOTUS outcome prediction. The SCDB contains 247 variables for each case. The variables are divided into six categories, given below with examples of SCDB variables in parentheses:
 
-1.	Identification (LEXIS Citation, Docket Number)
-2.	Background (Origin of Case, Source of Case, Reason for Granting Cert)
-3.	Chronological (Date of Decision, Term of Court, Natural Court)
-4.	Substantive (Legal Provisions Considered by the Court, Issue, Decision Direction)
-5.	Outcome (Disposition of Case, Winning Party, Formal Alteration of Precedent, Declaration of Unconstitutionality)
-6.	Voting & Opinion (Direction of the Individual Justice's Votes, Opinion, Majority and Minority Voting by Justice)
+1. Identification (LEXIS Citation, Docket Number)
+2. Background (Origin of Case, Source of Case, Reason for Granting Cert)
+3. Chronological (Date of Decision, Term of Court, Natural Court)
+4. Substantive (Legal Provisions Considered by the Court, Issue, Decision Direction)
+5. Outcome (Disposition of Case, Winning Party, Formal Alteration of Precedent, Declaration of Unconstitutionality)
+6. Voting & Opinion (Direction of the Individual Justice's Votes, Opinion, Majority and Minority Voting by Justice)
 
 Python SCOTUS Dataset includes a local copy of the SCDB case data for analysis.
 
@@ -60,9 +72,13 @@ Python SCOTUS Dataset requires the following libraries:
 - [`pandas`](https://pandas.pydata.org/)
 - [`numpy`](https://numpy.org/)
 
-Install these libraries using `pip` and requirements.txt:
+## Installation
+
+Clone the repository and install the required libraries:
 
 ```bash
+git clone https://github.com/yourusername/scotus-dataset.git
+cd scotus-dataset
 pip install -r requirements.txt
 ```
 
@@ -97,7 +113,7 @@ The `Transcript` class contains all transcript data.
 
 The code below compiles all case data and then prints statistics describing the data in the database:
 
-```bash
+```python
 from recon import compile_data, print_coverage_stats
 
 compile_data()
@@ -106,12 +122,17 @@ print_coverage_stats()
 
 ### Using Compiled Data
 
-```bash
+```python
 from models import Case
 
 for case in Case.select():
-  print(case.docket, case.transcript)
+    print(case.docket, case.transcript)
 ```
+
+## Contributing
+
+Contributions are welcome. Please open an issue or submit a pull request.
+Before submitting changes, run the test suite with `pytest`.
 
 ## License
 
