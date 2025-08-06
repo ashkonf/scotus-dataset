@@ -9,6 +9,7 @@
 - [Example](#Example)
 - [License](#License)
 - [Links](#Links)
+- [Development](#Development)
 
 
 ## Overview
@@ -129,3 +130,32 @@ Python SCOTUS Dataset is licensed under the
 - [peewee](http://docs.peewee-orm.com/en/latest/)
 - [SCOTUS transcripts website](https://www.supremecourt.gov/oral_arguments/argument_transcript/)
 - [Supreme Court Database](http://scdb.wustl.edu/)
+
+## Development
+
+This project uses [uv](https://github.com/astral-sh/uv) for dependency management and task execution. After cloning the
+repository, install the development dependencies and run the checks with:
+
+```bash
+uv run pre-commit run --all-files
+```
+
+Individual tools can be invoked via uv as well:
+
+```bash
+uv run ruff check  # static analysis
+uv run ruff format # code formatting
+uv run pyright     # type checking
+uv run pytest      # run tests with coverage
+```
+
+### Running the test suite
+
+Tests are executed with `pytest` and a coverage report is produced. To run the tests:
+
+```bash
+uv run pytest
+```
+
+The repository includes a pre-commit configuration that runs formatting, linting, type checking and tests. Enable it locally
+with `pre-commit install`.
