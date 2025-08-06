@@ -1,5 +1,4 @@
 import os
-import sys
 
 DATA_DIR_PATH = os.path.join(os.path.dirname(__file__), "data")
 TRANSCRIPTS_DIR_PATH = os.path.join(DATA_DIR_PATH, "transcripts")

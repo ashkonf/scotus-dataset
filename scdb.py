@@ -1,11 +1,7 @@
-import os
-import re
-import sys
 import pandas as pd
-from io import StringIO
 import logging
 
-from settings import TRANSCRIPTS_DIR_PATH, SCDB_FILE_PATH, VERBOSE
+from settings import SCDB_FILE_PATH, VERBOSE
 
 
 def __build_case(row):
