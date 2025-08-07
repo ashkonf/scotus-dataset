@@ -1,14 +1,26 @@
 # Python SCOTUS Dataset
 
-## Contents
+Tools for retrieving and combining Supreme Court oral argument transcripts with
+structured case data from the Supreme Court Database (SCDB).
 
-- [Overview](#Overview)
-- [Background](#Background)
-- [Dependencies](#Dependencies)
-- [Usage](#Usage)
-- [Example](#Example)
-- [License](#License)
-- [Links](#Links)
+## Table of Contents
+
+- [Overview](#overview)
+- [Background](#background)
+  - [SCOTUS decision prediction](#scotus-decision-prediction)
+  - [Structured data from the SCDB](#structured-data-from-the-scdb)
+  - [Unstructured SCOTUS transcripts](#unstructured-scotus-transcripts)
+- [Dependencies](#dependencies)
+- [Usage](#usage)
+  - [Function: compile_data()](#function-compile_data)
+  - [Function: print_coverage_stats()](#function-print_coverage_stats)
+  - [Class: Case](#class-case)
+  - [Class: Transcript](#class-transcript)
+- [Example](#example)
+  - [Compiling Structured Data](#compiling-structured-data)
+  - [Using Compiled Data](#using-compiled-data)
+- [License](#license)
+- [Links](#links)
 
 
 ## Overview
