@@ -113,6 +113,18 @@ for case in Case.select():
   print(case.docket, case.transcript)
 ```
 
+## Testing
+
+This project uses `pytest` for its automated test suite. After installing the
+dependencies, run the tests with:
+
+```bash
+pytest
+```
+
+The tests verify docket preprocessing and the configurable `VERBOSE` setting in
+`settings.py`.
+
 ## License
 
 Python SCOTUS Dataset is licensed under the
