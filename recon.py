@@ -1,10 +1,8 @@
-import os
 import re
-import sys
 import logging
 
 from settings import VERBOSE
-from models import Transcript, Statement, Case
+from models import Transcript, Case
 from transcripts import preprocess_all_transcripts
 from scdb import load_cases
 
@@ -20,13 +18,13 @@ def reconciliate_cases_and_transcripts():
     for case in Case.select():
         try:
             case_dockets[preprocess_docket(case.docket)] = case
-        except:
+        except Exception:
             continue
 
     for transcript in Transcript.select():
         try:
             transcript_dockets[preprocess_docket(transcript.docket)] = transcript
-        except:
+        except Exception:
             continue
 
     for docket in case_dockets:
@@ -51,17 +49,23 @@ def print_coverage_stats():
 
 
 def compile_data():
-    if VERBOSE: logging.info("Preprocessing transcripts ...")
+    if VERBOSE:
+        logging.info("Preprocessing transcripts ...")
     preprocess_all_transcripts()
-    if VERBOSE: logging.info("Done processing transcripts.")
+    if VERBOSE:
+        logging.info("Done processing transcripts.")
 
-    if VERBOSE: logging.info("Loading SCDB cases from CSV ...")
+    if VERBOSE:
+        logging.info("Loading SCDB cases from CSV ...")
     load_cases()
-    if VERBOSE: logging.info("Done loading SCDB cases.")
+    if VERBOSE:
+        logging.info("Done loading SCDB cases.")
 
-    if VERBOSE: logging.info("Reconciliating cases and transcripts ...")
+    if VERBOSE:
+        logging.info("Reconciliating cases and transcripts ...")
     reconciliate_cases_and_transcripts()
-    if VERBOSE: logging.info("Done reconciliating cases and transcripts.")
+    if VERBOSE:
+        logging.info("Done reconciliating cases and transcripts.")
 
 
 if __name__ == "__main__":

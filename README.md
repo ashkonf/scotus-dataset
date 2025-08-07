@@ -53,17 +53,31 @@ Research further supports a correlation between lawyers’ language use and case
 
 ## Dependencies
 
-Python SCOTUS Dataset requires the following libraries:
+Python SCOTUS Dataset targets **Python 3.8** and requires the following libraries:
 
-- [`pdfminer`](https://pypi.org/project/pdfminer/)
+- [`pdfminer.six`](https://pypi.org/project/pdfminer.six/)
 - [`peewee`](http://docs.peewee-orm.com/en/latest/)
 - [`pandas`](https://pandas.pydata.org/)
 - [`numpy`](https://numpy.org/)
 
-Install these libraries using `pip` and requirements.txt:
+### Environment setup
+
+Install [uv](https://github.com/astral-sh/uv) if it is not already available:
 
 ```bash
-pip install -r requirements.txt
+pip install uv
+```
+
+Create an isolated virtual environment and install the project dependencies:
+
+```bash
+uv sync --python 3.8
+```
+
+Run project code inside this environment with `uv run`:
+
+```bash
+uv run python recon.py
 ```
 
 ## Usage
@@ -95,9 +109,9 @@ The `Transcript` class contains all transcript data.
 
 ### Compiling Structured Data
 
-The code below compiles all case data and then prints statistics describing the data in the database:
+Launch a Python shell within the environment (`uv run python`) and execute:
 
-```bash
+```python
 from recon import compile_data, print_coverage_stats
 
 compile_data()
@@ -106,11 +120,13 @@ print_coverage_stats()
 
 ### Using Compiled Data
 
-```bash
+In the same shell, you can iterate over the compiled records:
+
+```python
 from models import Case
 
 for case in Case.select():
-  print(case.docket, case.transcript)
+    print(case.docket, case.transcript)
 ```
 
 ## License
@@ -125,7 +141,7 @@ Python SCOTUS Dataset is licensed under the
 - [FiveThirtyEight](https://fivethirtyeight.com/features/how-to-read-the-mind-of-a-supreme-court-justice/)
 - [NumPy](https://numpy.org/)
 - [pandas](https://pandas.pydata.org/)
-- [PDFMiner](https://pypi.org/project/pdfminer/)
+- [PDFMiner.six](https://pypi.org/project/pdfminer.six/)
 - [peewee](http://docs.peewee-orm.com/en/latest/)
 - [SCOTUS transcripts website](https://www.supremecourt.gov/oral_arguments/argument_transcript/)
 - [Supreme Court Database](http://scdb.wustl.edu/)

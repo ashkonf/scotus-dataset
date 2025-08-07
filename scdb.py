@@ -1,11 +1,8 @@
-import os
-import re
-import sys
-import pandas as pd
-from io import StringIO
 import logging
+import pandas as pd
 
-from settings import TRANSCRIPTS_DIR_PATH, SCDB_FILE_PATH, VERBOSE
+from settings import SCDB_FILE_PATH, VERBOSE
+from models import Case
 
 
 def __build_case(row):
@@ -25,7 +22,8 @@ def __build_case(row):
 def load_cases():
     case_df = pd.read_csv(SCDB_FILE_PATH, engine='python')
     for index, row in case_df.iterrows():
-        if VERBOSE: logging.info("processing case %d ..." % index)
+        if VERBOSE:
+            logging.info("processing case %d ..." % index)
 
         if Case.get_or_none(Case.vote_id == row.voteId) is None:
             case = __build_case(row)
@@ -33,4 +31,5 @@ def load_cases():
             case.transcript = transcript
             case = case.get_or_create()
 
-            if VERBOSE: logging.info("Loading case , Vote ID %s ..." % (case.vote_id))
+            if VERBOSE:
+                logging.info("Loading case , Vote ID %s ..." % (case.vote_id))

@@ -1,4 +1,3 @@
-import os
 from peewee import SqliteDatabase, Model, ForeignKeyField, BooleanField, CharField, TextField, IntegerField, DateTimeField
 
 from settings import DATABASE_FILE_PATH

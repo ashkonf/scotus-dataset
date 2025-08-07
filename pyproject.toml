@@ -1,0 +1,12 @@
+[project]
+name = "scotus-dataset"
+version = "0.1.0"
+description = "Tools for retrieving and reconciling SCOTUS data"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "pdfminer.six==20231228",
+    "peewee==3.11.2",
+    "pandas==0.25.3",
+    "numpy==1.17.4",
+]

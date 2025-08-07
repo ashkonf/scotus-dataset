@@ -1,9 +1,7 @@
+import logging
 import os
 import re
-import sys
 from io import StringIO
-import logging
-import re
 
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
@@ -11,7 +9,7 @@ from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.pdfpage import PDFPage
 
 from settings import TRANSCRIPTS_DIR_PATH, VERBOSE
-from models import Transcript, Statement, Case
+from models import Transcript, Statement
 
 
 ## General utility functions #########################################################################################################################
@@ -229,7 +227,8 @@ def __coalesce_statements(paragraphs):
 
 def __extract_statements(file_path):
     raw_text = __convert_pdf_to_txt(file_path)
-    if not raw_text: raw_text = ""
+    if not raw_text:
+        raw_text = ""
     petitioner_lines, respondent_lines, red_flags = __extract_lines(raw_text)
 
     if len(petitioner_lines) < 25:
@@ -295,19 +294,28 @@ def preprocess_all_transcripts():
     for dir_path in __list_dir(TRANSCRIPTS_DIR_PATH):
         term = dir_path[-4:]
 
-        if VERBOSE: logging.info("Preprocessing term %s ..." % term)
+        if VERBOSE:
+            logging.info("Preprocessing term %s ..." % term)
         transcript_count = 0
 
         for file_path in __list_dir(dir_path):
             file_name = os.path.basename(file_path)
             if Transcript.get_or_none(Transcript.file_name == file_name) is None:
-                if VERBOSE: logging.info("Preprocessing document %s/%s ..." % (term, file_name))
+                if VERBOSE:
+                    logging.info("Preprocessing document %s/%s ..." % (term, file_name))
                 transcript = __preprocess_transcript(file_path)
 
-                if VERBOSE: logging.info(
-                    "Done preprocessing document %s/%s. Parsed %s petitioner statements and %s repondent statements." % (
-                    term, file_name, len(transcript.petitioner_statements()), len(transcript.respondent_statements())))
+                if VERBOSE:
+                    logging.info(
+                        "Done preprocessing document %s/%s. Parsed %s petitioner statements and %s repondent statements." % (
+                            term,
+                            file_name,
+                            len(transcript.petitioner_statements()),
+                            len(transcript.respondent_statements()),
+                        )
+                    )
 
             transcript_count += 1
 
-        if VERBOSE: logging.info("Done preprocessing term %s. Parsed %s transcripts." % (term, transcript_count))
+        if VERBOSE:
+            logging.info("Done preprocessing term %s. Parsed %s transcripts." % (term, transcript_count))
