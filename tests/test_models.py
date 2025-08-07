@@ -1,9 +1,16 @@
 import os
 import sys
+from datetime import date
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-from scotus_dataset.models import aggressively_sanitize_string, Statement, Transcript
+from scotus_dataset.models import (
+    aggressively_sanitize_string,
+    RedFlag,
+    Statement,
+    Transcript,
+    Case,
+)
 
 
 def make_statement(speaker: str) -> Statement:
@@ -47,3 +54,38 @@ def test_add_red_flag_dedupes():
     assert transcript.has_red_flags()
     assert transcript.red_flags() == ["Issue"]
     assert RedFlag.select().where(RedFlag.transcript == transcript).count() == 1
+
+
+def test_transcript_full_text_combines_statements():
+    transcript = Transcript(
+        raw_text="", term=2023, docket="4", file_name="i"
+    ).get_or_create()
+    petitioner = Statement(
+        transcript=transcript,
+        speaker="PETITIONER",
+        speaker_is_petitioner=True,
+    ).get_or_create()
+    petitioner.add_paragraph("Petitioner")
+    respondent = Statement(
+        transcript=transcript,
+        speaker="RESPONDENT",
+        speaker_is_respondent=True,
+    ).get_or_create()
+    respondent.add_paragraph("Respondent")
+    assert transcript.full_text() == "Petitioner\n\nRespondent"
+
+
+def test_case_is_well_formed_checks_required_fields():
+    day = date(2024, 1, 1)
+    case = Case(
+        decision_label=1,
+        vote_id="v",
+        term=2024,
+        month=day,
+        day=day,
+        docket="d",
+        justice_name="Justice",
+    )
+    assert case.is_well_formed()
+    case.justice_name = ""
+    assert not case.is_well_formed()
