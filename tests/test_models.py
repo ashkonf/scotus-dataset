@@ -1,11 +1,9 @@
 import os
 import sys
 
-import pytest
-
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-from models import aggressively_sanitize_string, Statement, Transcript
+from scotus_dataset.models import aggressively_sanitize_string, Statement, Transcript
 
 
 def make_statement(speaker: str) -> Statement:

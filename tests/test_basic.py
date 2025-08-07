@@ -3,8 +3,8 @@ import sys
 
 sys.path.append(str(pathlib.Path(__file__).resolve().parent.parent))
 
-from models import aggressively_sanitize_string
-from settings import DATA_DIR_PATH
+from scotus_dataset.models import aggressively_sanitize_string
+from scotus_dataset.settings import DATA_DIR_PATH
 
 
 def test_sanitize() -> None:

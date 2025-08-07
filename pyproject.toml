@@ -26,18 +26,18 @@ addopts = "--cov=. --cov-report=term-missing"
 [tool.ruff]
 line-length = 88
 extend-exclude = [
-  "transcripts.py",
-  "models.py",
-  "recon.py",
-  "scdb.py",
+  "scotus_dataset/transcripts.py",
+  "scotus_dataset/models.py",
+  "scotus_dataset/recon.py",
+  "scotus_dataset/scdb.py",
 ]
 
 [tool.coverage.run]
 omit = [
-    "recon.py",
-    "scdb.py",
-    "transcripts.py",
-    "models.py",
+    "scotus_dataset/recon.py",
+    "scotus_dataset/scdb.py",
+    "scotus_dataset/transcripts.py",
+    "scotus_dataset/models.py",
     "tests/*",
 ]
 

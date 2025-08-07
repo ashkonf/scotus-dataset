@@ -114,7 +114,7 @@ The `Transcript` class contains all transcript data.
 The code below compiles all case data and then prints statistics describing the data in the database:
 
 ```python
-from recon import compile_data, print_coverage_stats
+from scotus_dataset.recon import compile_data, print_coverage_stats
 
 compile_data()
 print_coverage_stats()
@@ -123,7 +123,7 @@ print_coverage_stats()
 ### Using Compiled Data
 
 ```python
-from models import Case
+from scotus_dataset.models import Case
 
 for case in Case.select():
     print(case.docket, case.transcript)
