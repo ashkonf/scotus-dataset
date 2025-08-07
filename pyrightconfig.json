@@ -1,0 +1,8 @@
+{
+  "exclude": [
+    "transcripts.py",
+    "models.py",
+    "recon.py",
+    "scdb.py"
+  ]
+}
