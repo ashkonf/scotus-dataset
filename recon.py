@@ -18,13 +18,15 @@ def reconciliate_cases_and_transcripts():
     for case in Case.select():
         try:
             case_dockets[preprocess_docket(case.docket)] = case
-        except:
+        except (AttributeError, TypeError) as exc:
+            logging.debug("Skipping case without docket: %s", exc)
             continue
 
     for transcript in Transcript.select():
         try:
             transcript_dockets[preprocess_docket(transcript.docket)] = transcript
-        except:
+        except (AttributeError, TypeError) as exc:
+            logging.debug("Skipping transcript without docket: %s", exc)
             continue
 
     for docket in case_dockets:

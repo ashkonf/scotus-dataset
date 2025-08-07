@@ -2,6 +2,7 @@ import pandas as pd
 import logging
 
 from settings import SCDB_FILE_PATH, VERBOSE
+from models import Case
 
 
 def __build_case(row):
