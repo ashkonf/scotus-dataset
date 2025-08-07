@@ -335,7 +335,9 @@ def __preprocess_transcript(file_path):
     return transcript
 
 
-def preprocess_all_transcripts():
+def preprocess_all_transcripts() -> None:
+    """Parse all transcript files into the database."""
+
     for dir_path in __list_dir(TRANSCRIPTS_DIR_PATH):
         term = dir_path[-4:]
 

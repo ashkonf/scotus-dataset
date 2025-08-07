@@ -7,7 +7,19 @@ from .transcripts import preprocess_all_transcripts
 from .scdb import load_cases
 
 
-def preprocess_docket(docket):
+def preprocess_docket(docket: str) -> str:
+    """Normalize docket strings by removing annotations.
+
+    This strips leading "A-" and trailing markers such as "ORIG" or "(Original)"
+    so that dockets can be compared consistently.
+
+    Args:
+        docket: Raw docket identifier to clean.
+
+    Returns:
+        A cleaned docket string with extraneous annotations removed.
+    """
+
     return re.sub(
         ",? (?:ORIG|ORIG\.|Orig\.|Original|\(Original\)|M|orig\.|ORIG ORIG)$",
         "",
@@ -15,9 +27,16 @@ def preprocess_docket(docket):
     )
 
 
-def reconciliate_cases_and_transcripts():
-    case_dockets = {}
-    transcript_dockets = {}
+def reconciliate_cases_and_transcripts() -> None:
+    """Link cases with their transcripts by matching dockets.
+
+    For each case and transcript in the database, the docket string is
+    normalized with :func:`preprocess_docket`. When a matching docket is found,
+    the transcript is attached to the corresponding case.
+    """
+
+    case_dockets: dict[str, Case] = {}
+    transcript_dockets: dict[str, Transcript] = {}
     for case in Case.select():
         try:
             case_dockets[preprocess_docket(case.docket)] = case
@@ -37,7 +56,9 @@ def reconciliate_cases_and_transcripts():
             case.save()
 
 
-def print_coverage_stats():
+def print_coverage_stats() -> None:
+    """Log dataset coverage information for cases and transcripts."""
+
     total_count = Case.select().count()
     has_transcript_count = Case.select().where(Case.transcript.is_null(False)).count()
     coverage = float(has_transcript_count) / float(total_count)
@@ -60,7 +81,14 @@ def print_coverage_stats():
     )
 
 
-def compile_data():
+def compile_data() -> None:
+    """Run the full preprocessing pipeline.
+
+    This preprocesses transcripts, loads SCDB cases from CSV, and reconciles
+    cases with their transcripts. Progress information is logged when
+    :data:`VERBOSE` is enabled.
+    """
+
     if VERBOSE:
         logging.info("Preprocessing transcripts ...")
     preprocess_all_transcripts()

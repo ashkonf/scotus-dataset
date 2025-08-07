@@ -139,7 +139,8 @@ pytest
 ```
 
 The tests verify docket preprocessing and the configurable `VERBOSE` setting in
-`settings.py`.
+`settings.py`. The verbosity flag defaults to enabled; set the environment
+variable `VERBOSE` to `0`, `false`, or `no` to disable progress output.
 
 ## Contributing
 
