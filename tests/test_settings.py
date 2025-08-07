@@ -1,9 +1,10 @@
 import importlib
-import pathlib
+import os
 import sys
 
-
-sys.path.append(str(pathlib.Path(__file__).resolve().parent.parent))
+ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
 
 
 def reload_settings():

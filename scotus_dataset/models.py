@@ -81,9 +81,11 @@ class Transcript(Model):
         return [red_flag.gloss for red_flag in self.red_flags_]
 
     def full_text(self):
-        statements = [statement.full_text() for statement in self.petitioner_statements]
+        statements = [
+            statement.full_text() for statement in self.petitioner_statements()
+        ]
         statements += [
-            statement.full_text() for statement in self.respondent_statements
+            statement.full_text() for statement in self.respondent_statements()
         ]
         return "\n\n".join(statements)
 
@@ -138,7 +140,7 @@ class Case(Model):
     def is_well_formed(self):
         return (
             (self.vote_id is not None)
-            and (self.justice_id >= 0)
+            and bool(self.justice_name)
             and (self.day is not None)
         )
 
@@ -149,8 +151,6 @@ class Case(Model):
         before_term=None,
         month=None,
         before_month=None,
-        week=None,
-        before_week=None,
         day=None,
         before_day=None,
     ):
@@ -159,8 +159,6 @@ class Case(Model):
             before_term,
             month,
             before_month,
-            week,
-            before_week,
             day,
             before_day,
         ]
@@ -168,7 +166,7 @@ class Case(Model):
 
         well_formed_query = (
             cls.vote_id.is_null(False)
-            & cls.justice_id.is_null(False)
+            & cls.justice_name.is_null(False)
             & cls.day.is_null(False)
         )
 
@@ -180,10 +178,6 @@ class Case(Model):
             query = well_formed_query & (cls.month == month.date())
         elif before_month:
             query = well_formed_query & (cls.month < before_month.date())
-        elif week:
-            query = well_formed_query & (cls.week == week.date())
-        elif before_week:
-            query = well_formed_query & (cls.week < before_week.date())
         elif day:
             query = well_formed_query & (cls.day == day.date())
         elif before_day:
@@ -211,14 +205,6 @@ class Case(Model):
     @classmethod
     def max_month(cls):
         return max(set(case.month for case in cls.select_well_formed()))
-
-    @classmethod
-    def min_week(cls):
-        return min(set(case.week for case in cls.select_well_formed()))
-
-    @classmethod
-    def max_week(cls):
-        return max(set(case.week for case in cls.select_well_formed()))
 
     @classmethod
     def min_day(cls):

@@ -12,6 +12,7 @@ if ROOT_DIR not in sys.path:
 
 
 def _import_recon():
+    """Import ``scotus_dataset.recon`` with heavy dependencies stubbed out."""
     # Remove any existing modules that might interfere
     for name in ["recon", "models", "transcripts", "scdb"]:
         sys.modules.pop(name, None)
