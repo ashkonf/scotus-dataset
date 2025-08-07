@@ -6,9 +6,9 @@ Tools for retrieving, processing, and reconciling structured case data and oral 
 
 - [Overview](#overview)
 - [Background](#background)
-  - [SCOTUS Decision Prediction](#scotus-decision-prediction)
-  - [Structured Data from the SCDB](#structured-data-from-the-scdb)
-  - [Unstructured SCOTUS Transcripts](#unstructured-scotus-transcripts)
+  - [SCOTUS decision prediction](#scotus-decision-prediction)
+  - [Structured data from the SCDB](#structured-data-from-the-scdb)
+  - [Unstructured SCOTUS transcripts](#unstructured-scotus-transcripts)
 - [Dependencies](#dependencies)
 - [Installation](#installation)
 - [Usage](#usage)
