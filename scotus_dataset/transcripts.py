@@ -8,11 +8,12 @@ from pdfminer.layout import LAParams
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.pdfpage import PDFPage
 
-from settings import TRANSCRIPTS_DIR_PATH, VERBOSE
-from models import Transcript, Statement
+from .settings import TRANSCRIPTS_DIR_PATH, VERBOSE
+from .models import Transcript, Statement
 
 
 ## General utility functions #########################################################################################################################
+
 
 def __list_dir(dirPath):
     std = []
@@ -21,23 +22,31 @@ def __list_dir(dirPath):
             std.append(os.path.join(dirPath, name))
     return std
 
+
 def __file_hidden(path):
     return path.find(".") == 0
+
 
 def __convert_pdf_to_txt(path):
     rsrcmgr = PDFResourceManager()
     retstr = StringIO()
     laparams = LAParams()
     device = TextConverter(rsrcmgr, retstr, laparams=laparams)
-    fp = open(path, 'rb')
+    fp = open(path, "rb")
     interpreter = PDFPageInterpreter(rsrcmgr, device)
     password = ""
     maxpages = 0
     caching = True
     pagenos = set()
 
-    for page in PDFPage.get_pages(fp, pagenos, maxpages=maxpages, password=password, caching=caching,
-                                  check_extractable=True):
+    for page in PDFPage.get_pages(
+        fp,
+        pagenos,
+        maxpages=maxpages,
+        password=password,
+        caching=caching,
+        check_extractable=True,
+    ):
         interpreter.process_page(page)
 
     text = retstr.getvalue()
@@ -50,6 +59,7 @@ def __convert_pdf_to_txt(path):
 
 
 ## Transcript preprocessing ##########################################################################################################################
+
 
 def __process_red_flag(message, red_flags):
     red_flags.append(message)
@@ -64,7 +74,7 @@ BS_LINES = [
     "(202)289-2260",
     "(800) FOR DEPO",
     "Alderson Reporting Company",
-    "Official"
+    "Official",
 ]
 LOOSE_BS_REGEX = "(?:%s)" % ("|".join("(?:%s)" % re.escape(line) for line in BS_LINES),)
 STRICT_BS_REGEX = "^%s$" % (LOOSE_BS_REGEX,)
@@ -84,9 +94,14 @@ def __extract_lines(text):
     red_flags = []
 
     text = text.replace("\xc2\xa0\xc2\xad\xc2\xad", " -- ")
-    text = text.replace("\xc2", " ").replace("\xa0", "").replace("\xad", "").replace("\x0c", "").replace("\xe2\x80\x99",
-                                                                                                         "'").replace(
-        "\\'", "'")
+    text = (
+        text.replace("\xc2", " ")
+        .replace("\xa0", "")
+        .replace("\xad", "")
+        .replace("\x0c", "")
+        .replace("\xe2\x80\x99", "'")
+        .replace("\\'", "'")
+    )
     lines = text.split("\n")
 
     reached_proceedings = False
@@ -115,17 +130,28 @@ def __extract_lines(text):
     hit_end_phrase = False
     # Lots of tolerance for observed types of misspellings:
     ARGUMENTS_END_REGEX_1 = " *[\(\[] ?Where?u?pon,?  ?at  ?\d\d?[\:\;]\d\d(?:  ?o'clock)?(?:  ?(?:(?:[ap]\.m\.?)|(?:noon)))? ?,?  ?the"
-    ARGUMENTS_END_REGEX_2 = " *[\(\[] ?Where?u?pon,?  ?at  ?the  ?case  ?was  ?submitted"
-    ARGUMENTS_END_REGEX_3 = " *[\(\[] ?Where?u?pon,?  ?the  ?case  ?in  ?the  ?above-(?:en)?titled"
+    ARGUMENTS_END_REGEX_2 = (
+        " *[\(\[] ?Where?u?pon,?  ?at  ?the  ?case  ?was  ?submitted"
+    )
+    ARGUMENTS_END_REGEX_3 = (
+        " *[\(\[] ?Where?u?pon,?  ?the  ?case  ?in  ?the  ?above-(?:en)?titled"
+    )
     for line in new_lines:
-        if re.search("ON  ?BEHALF  ?OF  ?(?:THE  ?)?(?:(?:PETITIONER)|(?:APPELANT))S?", line):
+        if re.search(
+            "ON  ?BEHALF  ?OF  ?(?:THE  ?)?(?:(?:PETITIONER)|(?:APPELANT))S?", line
+        ):
             in_petitioner_section = True
             in_respondent_section = False
-        elif re.search("ON  ?BEHALF  ?OF  ?(?:THE  ?)?RES?PONDENTS?", line):  # we accomodate spelling errors
+        elif re.search(
+            "ON  ?BEHALF  ?OF  ?(?:THE  ?)?RES?PONDENTS?", line
+        ):  # we accomodate spelling errors
             in_respondent_section = True
             in_petitioner_section = False
-        elif re.search(ARGUMENTS_END_REGEX_1, line) or re.search(ARGUMENTS_END_REGEX_2, line) or re.search(
-                ARGUMENTS_END_REGEX_3, line):
+        elif (
+            re.search(ARGUMENTS_END_REGEX_1, line)
+            or re.search(ARGUMENTS_END_REGEX_2, line)
+            or re.search(ARGUMENTS_END_REGEX_3, line)
+        ):
             hit_end_phrase = True
             break
         elif not re.match("^[A-Z \.]+$", line):  # exclude lines declaring sections
@@ -147,7 +173,7 @@ def __starts_with_whitespace(string):
     # Checks to see if a string starts with whitespace:
     return string.lstrip() != string
 
-    
+
 def __append_trailing_space_if_necessary(line):
     # Appends whitespace to the end of a sentence fragment if appropriate:
     if line.endswith("-"):
@@ -159,11 +185,14 @@ def __append_trailing_space_if_necessary(line):
 
 
 def __coalesce_paragraphs(lines):
-
     paragraphs = []
     current_paragraph = None
     for line in lines:
-        if __starts_with_whitespace(line) or current_paragraph is None or re.match(SPEAKER_REGEX, line):
+        if (
+            __starts_with_whitespace(line)
+            or current_paragraph is None
+            or re.match(SPEAKER_REGEX, line)
+        ):
             if current_paragraph is not None:
                 paragraphs.append(current_paragraph)
             current_paragraph = line.strip()
@@ -174,13 +203,16 @@ def __coalesce_paragraphs(lines):
     if current_paragraph is not None:
         paragraphs.append(current_paragraph)
 
-    paragraphs = [re.sub(" +", " ", paragraph) for paragraph in
-                  paragraphs]  # condense multiple consecutive spaces into a single space
+    paragraphs = [
+        re.sub(" +", " ", paragraph) for paragraph in paragraphs
+    ]  # condense multiple consecutive spaces into a single space
 
     red_flags = []
     for paragraph in paragraphs:
         if re.match(LOOSE_BS_REGEX, paragraph, flags=re.IGNORECASE):
-            __process_red_flag("BS line %s found in paragraph." % (paragraph,), red_flags)
+            __process_red_flag(
+                "BS line %s found in paragraph." % (paragraph,), red_flags
+            )
 
     return paragraphs, red_flags
 
@@ -205,9 +237,14 @@ def __coalesce_statements(paragraphs):
             # Create a new current statement:
             speaker = speaker_match.group(1)
             paragraph = re.sub(SPEAKER_REGEX, "", paragraph).strip()
-            current_statement = Statement(speaker=speaker, ended_by_interruption=False, includes_laughter=False,
-                                                 ends_with_question=False, speaker_is_petitioner=False,
-                                                 speaker_is_respondent=False)
+            current_statement = Statement(
+                speaker=speaker,
+                ended_by_interruption=False,
+                includes_laughter=False,
+                ends_with_question=False,
+                speaker_is_petitioner=False,
+                speaker_is_respondent=False,
+            )
             current_statement.temp_paragraphs = []
             current_statement.temp_paragraphs.append(paragraph)
 
@@ -227,14 +264,19 @@ def __coalesce_statements(paragraphs):
 
 def __extract_statements(file_path):
     raw_text = __convert_pdf_to_txt(file_path)
-    if not raw_text: raw_text = ""
+    if not raw_text:
+        raw_text = ""
     petitioner_lines, respondent_lines, red_flags = __extract_lines(raw_text)
 
     if len(petitioner_lines) < 25:
-        __process_red_flag("Only %s petitioner lines." % (len(petitioner_lines),), red_flags)
+        __process_red_flag(
+            "Only %s petitioner lines." % (len(petitioner_lines),), red_flags
+        )
 
     if len(respondent_lines) < 25:
-        __process_red_flag("Only %s respondent lines." % (len(respondent_lines),), red_flags)
+        __process_red_flag(
+            "Only %s respondent lines." % (len(respondent_lines),), red_flags
+        )
 
     petitioner_paragraphs, new_red_flags = __coalesce_paragraphs(petitioner_lines)
     red_flags += new_red_flags
@@ -263,8 +305,12 @@ def __preprocess_transcript(file_path):
         docket = matches[0]
         logging.info("Regex matched file name more than once: %s." % file_name)
 
-    petitioner_statements, respondent_statements, raw_text, red_flags = __extract_statements(file_path)
-    transcript = Transcript(raw_text=raw_text, term=term, docket=docket, file_name=file_name)
+    petitioner_statements, respondent_statements, raw_text, red_flags = (
+        __extract_statements(file_path)
+    )
+    transcript = Transcript(
+        raw_text=raw_text, term=term, docket=docket, file_name=file_name
+    )
     transcript = transcript.get_or_create()
 
     for statement in petitioner_statements:
@@ -293,19 +339,32 @@ def preprocess_all_transcripts():
     for dir_path in __list_dir(TRANSCRIPTS_DIR_PATH):
         term = dir_path[-4:]
 
-        if VERBOSE: logging.info("Preprocessing term %s ..." % term)
+        if VERBOSE:
+            logging.info("Preprocessing term %s ..." % term)
         transcript_count = 0
 
         for file_path in __list_dir(dir_path):
             file_name = os.path.basename(file_path)
             if Transcript.get_or_none(Transcript.file_name == file_name) is None:
-                if VERBOSE: logging.info("Preprocessing document %s/%s ..." % (term, file_name))
+                if VERBOSE:
+                    logging.info("Preprocessing document %s/%s ..." % (term, file_name))
                 transcript = __preprocess_transcript(file_path)
 
-                if VERBOSE: logging.info(
-                    "Done preprocessing document %s/%s. Parsed %s petitioner statements and %s repondent statements." % (
-                    term, file_name, len(transcript.petitioner_statements()), len(transcript.respondent_statements())))
+                if VERBOSE:
+                    logging.info(
+                        "Done preprocessing document %s/%s. Parsed %s petitioner statements and %s repondent statements."
+                        % (
+                            term,
+                            file_name,
+                            len(transcript.petitioner_statements()),
+                            len(transcript.respondent_statements()),
+                        )
+                    )
 
             transcript_count += 1
 
-        if VERBOSE: logging.info("Done preprocessing term %s. Parsed %s transcripts." % (term, transcript_count))
+        if VERBOSE:
+            logging.info(
+                "Done preprocessing term %s. Parsed %s transcripts."
+                % (term, transcript_count)
+            )

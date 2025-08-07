@@ -1,7 +1,8 @@
 import pandas as pd
 import logging
 
-from settings import SCDB_FILE_PATH, VERBOSE
+from .settings import SCDB_FILE_PATH, VERBOSE
+from .models import Case
 
 
 def __build_case(row):
@@ -11,7 +12,7 @@ def __build_case(row):
     case_obj.term = row.term
     case_obj.docket = row.docket
     case_obj.justice_name = row.chief
-    date = row.dateDecision.split('/')
+    date = row.dateDecision.split("/")
     case_obj.day = date[1]
     case_obj.month = date[0]
 
@@ -19,9 +20,10 @@ def __build_case(row):
 
 
 def load_cases():
-    case_df = pd.read_csv(SCDB_FILE_PATH, engine='python')
+    case_df = pd.read_csv(SCDB_FILE_PATH, engine="python")
     for index, row in case_df.iterrows():
-        if VERBOSE: logging.info("processing case %d ..." % index)
+        if VERBOSE:
+            logging.info("processing case %d ..." % index)
 
         if Case.get_or_none(Case.vote_id == row.voteId) is None:
             case = __build_case(row)
@@ -29,4 +31,5 @@ def load_cases():
             case.transcript = transcript
             case = case.get_or_create()
 
-            if VERBOSE: logging.info("Loading case , Vote ID %s ..." % (case.vote_id))
+            if VERBOSE:
+                logging.info("Loading case , Vote ID %s ..." % (case.vote_id))

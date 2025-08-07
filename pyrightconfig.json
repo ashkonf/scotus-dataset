@@ -1,8 +1,8 @@
 {
   "exclude": [
-    "transcripts.py",
-    "models.py",
-    "recon.py",
-    "scdb.py"
+    "scotus_dataset/transcripts.py",
+    "scotus_dataset/models.py",
+    "scotus_dataset/recon.py",
+    "scotus_dataset/scdb.py"
   ]
 }

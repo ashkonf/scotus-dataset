@@ -3,7 +3,7 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-from models import aggressively_sanitize_string, RedFlag, Statement, Transcript
+from scotus_dataset.models import aggressively_sanitize_string, Statement, Transcript
 
 
 def make_statement(speaker: str) -> Statement:
