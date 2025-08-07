@@ -6,9 +6,9 @@ Tools for retrieving, processing, and reconciling structured case data and oral 
 
 - [Overview](#overview)
 - [Background](#background)
-  - [SCOTUS Decision Prediction](#scotus-decision-prediction)
-  - [Structured Data from the SCDB](#structured-data-from-the-scdb)
-  - [Unstructured SCOTUS Transcripts](#unstructured-scotus-transcripts)
+  - [SCOTUS decision prediction](#scotus-decision-prediction)
+  - [Structured data from the SCDB](#structured-data-from-the-scdb)
+  - [Unstructured SCOTUS transcripts](#unstructured-scotus-transcripts)
 - [Dependencies](#dependencies)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -128,6 +128,18 @@ from scotus_dataset.models import Case
 for case in Case.select():
     print(case.docket, case.transcript)
 ```
+
+## Testing
+
+This project uses `pytest` for its automated test suite. After installing the
+dependencies, run the tests with:
+
+```bash
+pytest
+```
+
+The tests verify docket preprocessing and the configurable `VERBOSE` setting in
+`settings.py`.
 
 ## Contributing
 
