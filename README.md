@@ -60,10 +60,10 @@ Python SCOTUS Dataset requires the following libraries:
 - [`pandas`](https://pandas.pydata.org/)
 - [`numpy`](https://numpy.org/)
 
-Install these libraries using `pip` and requirements.txt:
+Install these libraries using [uv](https://github.com/astral-sh/uv):
 
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
 
 ## Usage

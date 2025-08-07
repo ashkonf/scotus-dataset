@@ -1,0 +1,16 @@
+[project]
+name = "scotus-dataset"
+version = "0.1.0"
+description = "Utilities for retrieving and processing SCOTUS data"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "pdfminer.six==20200726",
+    "peewee==3.11.2",
+    "pandas==0.25.3",
+    "numpy==1.17.4",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
