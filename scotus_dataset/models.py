@@ -19,8 +19,17 @@ DATABASE = SqliteDatabase(DATABASE_FILE_PATH)
 ## Utility functions ##########################################################################################################################
 
 
-def aggressively_sanitize_string(string):
-    return "".join([char if ord(char) < 128 else "" for char in string])
+def aggressively_sanitize_string(text: str) -> str:
+    """Remove non-ASCII characters from ``text``.
+
+    Args:
+        text: Input string that may contain non-ASCII characters.
+
+    Returns:
+        The input string with any characters outside the ASCII range removed.
+    """
+
+    return "".join(char for char in text if ord(char) < 128)
 
 
 ## Models #####################################################################################################################################

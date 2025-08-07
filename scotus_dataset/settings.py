@@ -10,4 +10,19 @@ SCDB_FILE_PATH: Final[str] = os.path.join(
     DATA_DIR_PATH, "SCDB_2019_01_caseCentered_Docket.csv"
 )
 DATABASE_FILE_PATH: Final[str] = os.path.join(DATA_DIR_PATH, "db.sqlite")
-VERBOSE: Final[bool] = bool(os.environ.get("VERBOSE", True))
+
+
+def _env_flag(name: str, default: bool = False) -> bool:
+    """Return ``True`` if the environment variable is truthy.
+
+    The check is case insensitive and treats ``1``, ``true``, ``yes``, ``y`` and
+    ``t`` as truthy values. Any other non-empty string is considered ``False``.
+    """
+
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "y", "t"}
+
+
+VERBOSE: Final[bool] = _env_flag("VERBOSE", default=True)

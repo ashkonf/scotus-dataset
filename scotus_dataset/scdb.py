@@ -5,7 +5,9 @@ from .settings import SCDB_FILE_PATH, VERBOSE
 from .models import Case
 
 
-def __build_case(row):
+def __build_case(row: pd.Series) -> Case:
+    """Create a :class:`Case` instance from a SCDB CSV row."""
+
     case_obj = Case()
     case_obj.decision_label = row.decisionType
     case_obj.vote_id = row.voteId
@@ -19,7 +21,9 @@ def __build_case(row):
     return case_obj
 
 
-def load_cases():
+def load_cases() -> None:
+    """Load SCDB cases from CSV into the database."""
+
     case_df = pd.read_csv(SCDB_FILE_PATH, engine="python")
     for index, row in case_df.iterrows():
         if VERBOSE:

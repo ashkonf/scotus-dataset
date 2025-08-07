@@ -21,4 +21,10 @@ def test_verbose_default_true(monkeypatch):
 def test_verbose_env_override(monkeypatch):
     monkeypatch.setenv("VERBOSE", "0")
     settings = reload_settings()
+    assert settings.VERBOSE is False
+
+
+def test_verbose_env_truthy(monkeypatch):
+    monkeypatch.setenv("VERBOSE", "1")
+    settings = reload_settings()
     assert settings.VERBOSE is True
