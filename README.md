@@ -5,6 +5,7 @@ Tools for retrieving, processing, and reconciling structured case data and oral 
 ## Table of Contents
 
 - [Overview](#overview)
+- [Relationship to the textbook chapter](#relationship-to-the-textbook-chapter)
 - [Background](#background)
   - [SCOTUS decision prediction](#scotus-decision-prediction)
   - [Structured data from the SCDB](#structured-data-from-the-scdb)
@@ -26,6 +27,10 @@ Tools for retrieving, processing, and reconciling structured case data and oral 
 ## Overview
 
 The Python SCOTUS Dataset repository combines trial transcripts from the [SCOTUS website](https://www.supremecourt.gov/oral_arguments/argument_transcript/) with structured case data from the [Supreme Court Database](http://scdb.wustl.edu/) (SCDB) at Washington University Law School to create comprehensive summaries of recent cases. These data are primarily used for building systems that predict SCOTUS decisions.
+
+## Relationship to the textbook chapter
+
+The companion [textbook chapter](https://www.elgaronline.com/edcollchap/edcoll/9781788972819/9781788972819.00015.xml) outlines how combining structured data from the Supreme Court Database with unstructured oral-argument transcripts can drive machine-learning research on Supreme Court outcomes. This repository puts that approach into practice by gathering those sources, cleaning them, and merging them into a unified dataset for modeling and analysis.
 
 ## Background
 
@@ -162,6 +167,7 @@ Python SCOTUS Dataset is licensed under the
 - [peewee](http://docs.peewee-orm.com/en/latest/)
 - [SCOTUS transcripts website](https://www.supremecourt.gov/oral_arguments/argument_transcript/)
 - [Supreme Court Database](http://scdb.wustl.edu/)
+- [Companion textbook chapter](https://www.elgaronline.com/edcollchap/edcoll/9781788972819/9781788972819.00015.xml)
 
 ## Development
 
