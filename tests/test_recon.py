@@ -10,28 +10,37 @@ if ROOT_DIR not in sys.path:
 
 
 def _import_recon():
+    """Import ``scotus_dataset.recon`` with heavy dependencies stubbed out."""
     # Remove any existing modules that might interfere
-    for name in ['recon', 'models', 'transcripts', 'scdb']:
+    module_names = [
+        "scotus_dataset.recon",
+        "scotus_dataset.models",
+        "scotus_dataset.transcripts",
+        "scotus_dataset.scdb",
+    ]
+    for name in module_names:
         sys.modules.pop(name, None)
 
     # Stub out heavy dependencies
-    models_stub = types.ModuleType('models')
+    models_stub = types.ModuleType("scotus_dataset.models")
+
     class Dummy:
         pass
+
     models_stub.Transcript = Dummy
     models_stub.Statement = Dummy
     models_stub.Case = Dummy
-    sys.modules['models'] = models_stub
+    sys.modules["scotus_dataset.models"] = models_stub
 
-    transcripts_stub = types.ModuleType('transcripts')
+    transcripts_stub = types.ModuleType("scotus_dataset.transcripts")
     transcripts_stub.preprocess_all_transcripts = lambda: None
-    sys.modules['transcripts'] = transcripts_stub
+    sys.modules["scotus_dataset.transcripts"] = transcripts_stub
 
-    scdb_stub = types.ModuleType('scdb')
+    scdb_stub = types.ModuleType("scotus_dataset.scdb")
     scdb_stub.load_cases = lambda: None
-    sys.modules['scdb'] = scdb_stub
+    sys.modules["scotus_dataset.scdb"] = scdb_stub
 
-    return importlib.import_module('recon')
+    return importlib.import_module("scotus_dataset.recon")
 
 
 recon = _import_recon()
